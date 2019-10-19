@@ -1,5 +1,6 @@
 import gulp from "gulp";
 // import browserSync from "browser-sync";
+import gpug from "gulp-pug";
 import sass from "gulp-sass";
 import autoprefixer from "gulp-autoprefixer";
 import sourcemaps from "gulp-sourcemaps";
@@ -11,12 +12,20 @@ sass.compiler = require("node-sass");
 
 
 const path = {
+    pug: "src/template/pages/**/*.pug",
+    dest: "./",
     sass: "sass/*.scss",
     css: "css/",
     js: "js/*.js",
     sub: "sub/sub.html",
     index: "index.html"
 }
+
+const pug = () => 
+    gulp
+    .src(path.pug)
+    .pipe(gpug({ pretty: true }))
+    .pipe(gulp.dest(path.dest));
 
 const styles = () =>
     gulp
@@ -63,6 +72,6 @@ const styles = () =>
     
 
 const live = gulp.parallel([webServer, watch]);
-const build = gulp.series([styles]);
+const build = gulp.series([styles, pug]);
 
 export const dev = gulp.series([build, live]);
